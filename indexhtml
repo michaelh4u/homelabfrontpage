@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My Site</title>
+<style>
+ul {
+	font-family: Arial, Helvetica, sans-serif;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+	position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover:not(.active) {
+    background-color: #111;
+}
+
+.active {
+    background-color: #4CAF50;
+}
+</style>
+</head>
+<body>
+<!--
+<h1>Welcome!</h1>
+-->
+
+<ul>
+  <li><a class="active" href="https://mysite.com">Home</a></li>
+  <li><a href="https://mysite.com/htpc">HTPC</a></li>
+  <li><a href="https://mysite.com/nzbget">NZBGet</a></li>
+  <li><a href="https://mysite.com/couchpotato">CouchPotato</a></li>
+  <li><a href="https://mysite.com/headphones">Headphones</a></li>
+  <li><a href="https://mysite.com/sonarr">Sonarr</a></li>
+  <li><a href="https://app.plex.tv/web/app">Plex</a></li>
+  <li><a href="http://mysite.com:3000">PlexRequests</a></li>
+  <li><a href="https://mysite.com/plexwatchweb">PlexWatch</a></li>
+  <li><a href="https://mysite.com:5000">PRTG</a></li>
+</ul>
+
+<br>
+<hr>
+<iframe width=1900 height=425 scrolling="no" frameborder="0"
+   src="<public PRTG map link>">
+</iframe>
+<hr>
+<iframe width=1900 height=425 scrolling="no" frameborder="0"
+   src="<public PRTG map link>">
+</iframe>
+ 
+<br>
+<hr>
+
+<!--
+<p>Internal Links</p>
+<ul>
+  <li><a class="active" href="https://mysite.com">Home</a></li>
+  <li><a href="http://winvm01:8085/htpc" target="_blank">HTPC</a></li>
+  <li><a href="http://winvm01:8001" target="_blank">NZBGet</a></li>
+  <li><a href="http://winvm01:8003/couchpotato" target="_blank">CouchPotato</a></li>
+  <li><a href="http://winvm01:8004/headphones" target="_blank">Headphones</a></li>
+  <li><a href="http://winvm01:8002/sonarr" target="_blank">Sonarr</a></li>
+  <li><a href="http://192.168.1.25:32400/web" target="_blank">Plex</a></li>
+  <li><a href="http://192.168.1.25:3000" target="_blank">PlexRequests</a></li>
+  <li><a href="http://192.168.1.25/plexwatchweb" target="_blank">PlexWatch</a></li>
+  <li><a href="https://winvm01-prtg" target="_blank">PRTG</a></li>
+</ul>
+<br>
+<hr>
+-->
+
+</body>
+</html>
