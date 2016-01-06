@@ -1,0 +1,197 @@
+
+#user  nobody;
+worker_processes  1;
+
+#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+#pid        logs/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+    #                  '$status $body_bytes_sent "$http_referer" '
+    #                  '"$http_user_agent" "$http_x_forwarded_for"';
+
+    #access_log  logs/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+
+    #gzip  on;
+
+    server {
+        listen       80;
+        server_name  myserver.com, 192.168.1.24;
+		
+	location / {
+		}
+	location /htpc {
+		proxy_pass http://192.168.1.24:8085/htpc;
+		}
+	location /nzbget {
+		proxy_pass http://192.168.1.24:8001;
+		proxy_set_header Host $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	#communication error for external (Invalid Status: 403)
+	#work in progress
+	}
+	location /sonarr {
+		proxy_pass http://192.168.1.24:8002/sonarr;
+		proxy_set_header Host $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		}
+	location /couchpotato {
+		proxy_pass http://192.168.1.24:8003/couchpotato;
+		proxy_set_header Host $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header  Host localhost:8003;
+		proxy_redirect    default;
+	}
+	location /headphones {
+		proxy_pass http://192.168.1.24:8004/headphones;
+	}
+	location /plex/ {
+		proxy_pass http://192.168.1.25:32400/web/;
+		proxy_buffering off;
+		proxy_http_version 1.1;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection $http_connection;
+		proxy_cookie_path /web/ /plex/;
+	#proxy_set_header Host $host;
+	#proxy_set_header X-Real-IP $remote_addr;
+	#proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	#blank page external
+	#work in progress
+	}
+	location /plexrequests {
+		proxy_pass http://192.168.1.25:3000;
+		proxy_set_header Host $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	#blank page for internal/external
+	#work in progess
+	}
+	location /plexwatchweb {
+		proxy_pass http://192.168.1.25/plexwatchweb;
+	#images broken from external
+	#work in progress
+	}
+	location /prtg {
+		proxy_pass httpS://192.168.1.30;
+		proxy_set_header Host $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	#not found external
+	#work in progress
+	}
+
+        #charset koi8-r;
+
+        #access_log  logs/host.access.log  main;
+
+        #error_page  404              /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+
+        # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+        #
+        #location ~ \.php$ {
+        #    proxy_pass   http://127.0.0.1;
+        #}
+
+        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+        #
+        #location ~ \.php$ {
+        #    root           html;
+        #    fastcgi_pass   127.0.0.1:9000;
+        #    fastcgi_index  index.php;
+        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+        #    include        fastcgi_params;
+        #}
+
+        # deny access to .htaccess files, if Apache's document root
+        # concurs with nginx's one
+        #
+        #location ~ /\.ht {
+        #    deny  all;
+        #}
+    }
+
+
+    # another virtual host using mix of IP-, name-, and port-based configuration
+    #
+    #server {
+    #    listen       8000;
+    #    listen       somename:8080;
+    #    server_name  somename  alias  another.alias;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+
+    # HTTPS server
+    #
+    #server {
+    #    listen       443 ssl;
+    #    server_name  localhost;
+
+    #    ssl_certificate      cert.pem;
+    #    ssl_certificate_key  cert.key;
+
+    #    ssl_session_cache    shared:SSL:1m;
+    #    ssl_session_timeout  5m;
+
+    #    ssl_ciphers  HIGH:!aNULL:!MD5;
+    #    ssl_prefer_server_ciphers  on;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+	#server {
+	#listen 443 ssl;
+    
+	#root html;
+	#server_name myserver.com, 192.168.1.24;
+    
+    #ssl_certificate      /nginx-1.8.0/ssl/myserver.crt;
+    #ssl_certificate_key  /nginx-1.8.0/ssl/newprivkey.key;
+    
+	##enables all versions of TLS, but not SSLv2 or 3 which are weak and now deprecated.
+	#ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    
+	##Disables all weak ciphers
+	#ssl_ciphers "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4";
+    
+	#ssl_prefer_server_ciphers on;
+    
+	#index index.html index.php;
+    
+	#} 
+}
